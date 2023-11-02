@@ -114,17 +114,18 @@ class StreamAudioToText:
             '현재시간', '확대', '티비켜', '파일연결', '풍량설정', '피자집', '할머니번호', '혼자놀아', '회사', '홈', '종류', '증권시황', '채널사번', '축소', '캐이비애쓰투', '크기자동조절', '티비꺼'
         ]
 
-        
         print(f'transcript : {transcript}')
-        for word in predescribed_words:
-            similarity = SequenceMatcher(None, transcript.lower(), word.lower()).ratio()
-            if similarity >= highest_similarity:  # > 사용하여 가장 높은 값만 저장
-                highest_similarity = similarity
-                most_similar = word
-                if similarity == 1:  # 완벽하게 일치하는 경우 반복문 탈출
-                    break
-                
-        print(f'{count}:{most_similar}')
+        if transcript in predescribed_words:
+            print(f'{count}:{transcript}')
+     
+        else:
+            for word in predescribed_words:
+                similarity = SequenceMatcher(None, transcript, word).ratio()
+                if similarity >= highest_similarity:
+                    highest_similarity = similarity
+                    most_similar = word
+            print(f'{count}:{most_similar}')
+
 
 
     def start(self):
