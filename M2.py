@@ -121,9 +121,9 @@ def first_stage(transcript):
     }
 
     #유사도 측정
-    for key, predefined_text in predefined_sentences.items():
+    for key, _ in predefined_sentences.items():
         # SequenceMatcher를 사용하여 유사도 계산
-        similarity = SequenceMatcher(None, transcript, predefined_text).ratio()
+        similarity = SequenceMatcher(None, transcript, key).ratio()
         if similarity >= highest_similarity:
             highest_similarity = similarity
             most_similar = key
