@@ -33,7 +33,7 @@ class StreamAudioToText:
             rate=self.rate,
             input=True,
             frames_per_buffer=self.chunk,
-            input_device_index=0  # 여기에 장치 번호를 지정
+            input_device_index=1  # 여기에 장치 번호를 지정
         )
         self.start_time = time.time()
 
