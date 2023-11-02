@@ -55,13 +55,20 @@ class StreamAudioToText:
 
     def start(self):
         while True: 
-            if time.time() - self.start_time > MAX_STREAM_MINUTES * 60:
+            try:
+                if time.time() - self.start_time > MAX_STREAM_MINUTES * 60:
+                    self.restart_stream()
+                    
+                audio_data = self.audio_stream.read(self.chunk, exception_on_overflow=False)
+                request = types.StreamingRecognizeRequest(audio_content=audio_data)
+                responses = self.client.streaming_recognize(self.streaming_config, [request])
+                self.listen_print_loop(responses)
+            
+            except IOError as e:
+                print(f"IOError: {e}")
+                # 여기서 오류를 처리하고 필요한 경우 스트림을 재시작할 수 있습니다.
                 self.restart_stream()
-                
-            audio_data = self.audio_stream.read(self.chunk)
-            request = types.StreamingRecognizeRequest(audio_content=audio_data)
-            responses = self.client.streaming_recognize(self.streaming_config, [request])
-            self.listen_print_loop(responses)
+
 
     def restart_stream(self):
         self.audio_stream.stop_stream()
