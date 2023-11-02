@@ -3,6 +3,7 @@ import time
 from google.cloud import speech_v1p1beta1 as speech
 from google.cloud.speech_v1p1beta1 import types
 import pyaudio
+from difflib import SequenceMatcher
 
 # Google STT 인증 정보 설정
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +51,7 @@ class StreamAudioToText:
             if result.is_final:
                 global count
                 count += 1
-                print(f'{count}:{transcript}')
+                first_stage(transcript)
                 break
 
     def start(self):
@@ -85,7 +86,58 @@ class StreamAudioToText:
             input_device_index=1  # 여기에 장치 번호를 지정
         )
         self.start_time = time.time()
-        
+
+# 1단계 : 유사도 측정해서 1단계 명령어 출력 및 2단계 명령어 리턴
+def first_stage(transcript):
+    highest_similarity = 0.0
+    most_similar = None
+
+    predefined_sentences = {
+        "날씨가 너무 더워": ["에어콘켜", "에어컨작동", "선풍기"],
+        "안방이 춥네": ["안방난방온도 올려", "안방난방켜", "따뜻하게해줘"],
+        "거실이 어두워": ["거실밝게", "거실불밝게", "거실조명켜", "거실조명켜라", "전체불켜", "전체불켜라", "전체조명켜", "전체조명켜라", "조명밝게"],
+        "공기가 탁하네": ["창문열어", "커튼열어", "문열어", "창문열어"],
+        "나 외출한다": ["보일러꺼", "보일러 정지", "전체조명꺼", "전체조명꺼라", "전등꺼", "외출모드", "외출모드설정", "외출모드실행"],
+        "시원한 것 마실래": ["냉장고", "냉장고로와"],
+        "점심은 중국집 배달시켜줘": ["전화번호부", "중국집전화연결", "중국집", "중국집번호", "통화", "전화걸기", "전화통화"],
+        "핸드폰 충전해줘": ["충전해", "충전하러가", "충전"],
+        "거실 좀 치워놔": ["거실청소"],
+        'TV로 뉴스 틀어줘' : ['티비', '뉴스', '뉴스안내','뉴스안내해줘', '뉴스정보'],
+        '오늘 일정은 어떻게 돼?' : ['일정검색', '일정관리', '일정관리안내해줘', '일정안내', '일정확인'],
+        '아이스크림 넣어줘': ['파워냉동', '냉장고', '냉장고로와'],
+        '가스레인지 켜놓고 왔어': ['까스닫아', '까스닫어', '까스밸브', '까스밸브닫아', '까스잠거', '까스잠궈'],
+        '안방에 불켜줘': ['안방불켜', '안방불켜라', '안방조명켜', '안방조명켜라'],
+        '저녁은 피자먹을래': ['피잣집', '피잣집전화연결', '피잣집 번호', '통화', '전화걸기', '전화통화'],
+        '햇빛이 뜨거워': ['커튼닫아', '에어콘켜', '에어컨작동', '선풍기'],
+        'TV 소리가 작네': ['티비', '볼륨업', '볼륨높임', '볼륨크게해줄래'],
+        '집안이 눅눅하네': ['가습기', '가습기작동'],
+        '공부방에 불켜고 따뜻하게 해줘': ['공부방점등', '공부방켜', '공부방난방', '보일러', '보일러작동', '보일러켜줘', '따뜻하게해줘'],
+        '누가왔나봐': ['월패드', '월패드보여줘'],
+        '이메일 보내줘': ['아웃룩', '이메일보내기', '전자메일', '전자우편', '메일', '메일보내기', '메일작성', '메일전송'],
+        '택배왔는지 확인하려고': ['경비실연결', '경비실통화'],
+        '침실로 들어갈께': ['침실불켜', '침실전등', '침실전등켜'],
+        '나 잔다': ['전체불꺼', '전체불꺼라', '전체조명꺼', '전체조명꺼라', '침실불꺼', '취침모드'],
+        '엄마에게 문자보내줘': ['문자메시지', '문자전송', '발신'],
+    }
+
+    #유사도 측정
+    for key, predefined_text in predefined_sentences.items():
+        # SequenceMatcher를 사용하여 유사도 계산
+        similarity = SequenceMatcher(None, transcript, predefined_text).ratio()
+        if similarity > highest_similarity:
+            highest_similarity = similarity
+            most_similar = key
+
+    # 가장 유사한 문장의 키를 반환합니다 (예: "greeting", "farewell", ...)
+    print(f'1단계 명령어:{most_similar}')
+    print(f'2단계 명령어:{predefined_sentences[most_similar]}')
+    return predefined_sentences[most_similar]
+
+#대응명령어에 해당하는 ROS를 구현하면 됩니다. -> 민석, 명준파트
+def second_stage():
+    pass
+
+
 def main():
     print("실시간 STT 시작. 종료하려면 Ctrl+C를 누르세요.")
     stream_audio = StreamAudioToText()
