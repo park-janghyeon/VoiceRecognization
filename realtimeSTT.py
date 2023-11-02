@@ -57,8 +57,16 @@ class StreamAudioToText:
             if time.time() - self.start_time > MAX_STREAM_MINUTES * 60:
                 self.restart_stream()
                 
-            requests = (types.StreamingRecognizeRequest(audio_content=self.audio_stream.read(self.chunk)) for _ in range(1))
-            responses = self.client.streaming_recognize(self.streaming_config, requests)
+            # 오디오 스트림에서 청크 크기만큼 데이터를 읽습니다.
+            audio_data = self.audio_stream.read(self.chunk)
+
+            # 읽은 데이터를 Google STT API로 전송하기 위한 요청을 생성합니다.
+            request = types.StreamingRecognizeRequest(audio_content=audio_data)
+
+            # 읽은 데이터를 기반으로 STT API를 호출하고 응답을 받습니다.
+            responses = self.client.streaming_recognize(self.streaming_config, [request])
+
+            # 응답을 처리합니다.
             self.listen_print_loop(responses)
 
     def restart_stream(self):
