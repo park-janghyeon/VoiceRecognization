@@ -123,7 +123,8 @@ class StreamAudioToText:
                 most_similar = word
                 if similarity == 1:  # 완벽하게 일치하는 경우 반복문 탈출
                     break
-            print(f'{count}:{most_similar}')
+                
+        print(f'{count}:{most_similar}')
 
 
     def start(self):
