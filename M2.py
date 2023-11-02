@@ -124,11 +124,12 @@ def first_stage(transcript):
     for key, predefined_text in predefined_sentences.items():
         # SequenceMatcher를 사용하여 유사도 계산
         similarity = SequenceMatcher(None, transcript, predefined_text).ratio()
-        if similarity > highest_similarity:
+        if similarity >= highest_similarity:
             highest_similarity = similarity
             most_similar = key
 
     # 가장 유사한 문장의 키를 반환합니다 (예: "greeting", "farewell", ...)
+    print(f'trasnscript: {transcript}')
     print(f'1단계 명령어:{most_similar}')
     print(f'2단계 명령어:{predefined_sentences[most_similar]}')
     return predefined_sentences[most_similar]
