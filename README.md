@@ -25,7 +25,7 @@
 
 오디오 데이터, 음성 인식, 데이터 인코딩, 샘플링 rate, 데이터 chunk, 실시간 API, Speech To Text, 유사도 비교, SequenceMatcher, 반복문 최적화
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/aa9492f6-d0c1-4eb8-9c3b-0b6638cdbb5f/a9cdd06e-22b1-45c6-9806-a8bfdabb6c6a/Untitled.jpeg)
+![image](https://github.com/typingmistake/VoiceRecognization/assets/102957984/0b2ab216-9921-4f3d-a588-a5a091465051)
 
 ```markdown
 # 오디오 데이터 처리 프로세스
