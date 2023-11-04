@@ -13,9 +13,9 @@
 
 ## 목차
 
-- [프로젝트 요약](https://www.notion.so/c9f0fe72ea024a00bc460b3c748bd24d?pvs=21)
-- [프로젝트 진행상의 난관](https://www.notion.so/c9f0fe72ea024a00bc460b3c748bd24d?pvs=21)
-- 피드백
+- [프로젝트 요약](#프로젝트-요약)
+- [프로젝트 진행상의 난관](#프로젝트-진행상의-난관)
+- [피드백](#피드백)
 
 ## 프로젝트 요약
 
@@ -27,7 +27,7 @@
 
 오디오 데이터, 음성 인식, 데이터 인코딩, 샘플링 rate, 데이터 chunk, 실시간 API, Speech To Text, 유사도 비교, SequenceMatcher, 반복문 최적화
 
-![Untitled](https://github.com/park-janghyeon/board/files/13256326/c9f0fe72ea024a00bc460b3c748bd24d.md)
+![Untitled](https://github.com/park-janghyeon/VoiceRecognization/assets/63183021/e6b67288-f934-4068-a27d-2cd9e534f66b)
 
 ```markdown
 # 오디오 데이터 처리 프로세스
